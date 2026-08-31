@@ -1,0 +1,18 @@
+:root {
+  --dm-theme-v1: 1;
+  --bg: #0e1116;
+  --backdrop: #0a0d11;
+  --surface: #161b22;
+  --surface-2: #1d232d;
+  --line: #2b3240;
+  --ink: #e8edf4;
+  --muted: #98a3b3;
+  --accent: #e8a33d;
+  --accent-ink: #10131a;
+  --accent-soft: rgba(232, 163, 61, 0.16);
+  --ok: #4cc38a;
+  --err: #e5534b;
+  --head-font: "Space Grotesk", system-ui, sans-serif;
+  --body-font: "Inter", system-ui, sans-serif;
+  --mono-font: "JetBrains Mono", ui-monospace, monospace;
+}

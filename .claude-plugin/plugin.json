@@ -1,0 +1,9 @@
+{
+  "name": "deck-meet",
+  "description": "Interview-driven slide deck generator for Claude Code. Turns any material (markdown, PDF, docx, URL, notes, or a talked-through idea) into one standalone animated HTML deck: offline, arrow-key navigation, animated SVG diagrams, presenter notes window, overview grid, in-place editing, and exact 16:9 PDF export.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Honey Paptan",
+    "email": "hpaptan@gmail.com"
+  }
+}

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>
+{{PASTE fonts.css VERBATIM}}
+{{PASTE theme.css VERBATIM}}
+{{PASTE base.css VERBATIM}}
+</style>
+</head>
+<body>
+<div class="deck">
+<div class="stage">
+
+<section class="slide center" aria-label="Title">
+  <h1>{{TITLE}}</h1>
+  <p class="dek">{{THE ONE-LINE CLAIM OF THE WHOLE DECK}}</p>
+</section>
+
+<section class="slide" aria-label="{{SHORT NAME}}" data-example>
+  <h2>{{SLIDE TITLE AS A SENTENCE THE AUDIENCE COULD DISAGREE WITH}}</h2>
+  <p>{{One or two sentences of setup. Numbers stated in prose too.}}</p>
+  <figure>
+    {{ONE SVG FROM svg-motifs.md, MOTION ON MECHANISM DIAGRAMS}}
+    <figcaption><strong>{{Label, 3 to 6 words.}}</strong> {{One sentence on what the picture shows that prose cannot.}}</figcaption>
+  </figure>
+  <aside class="notes">{{SPEAKER NOTES, OPTIONAL: what to say over this slide. Never rendered on the slide or in the PDF; shown in the presenter window (N key).}}</aside>
+</section>
+
+<section class="slide" aria-label="Reveal example" data-example>
+  <h2>{{SENTENCE}}</h2>
+  <ul>
+    <li>{{Visible from the start}}</li>
+    <li data-step="1">{{Appears on first arrow press}}</li>
+    <li data-step="2">{{Appears on second arrow press}}</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Stats example" data-example>
+  <h2>{{SENTENCE WITH THE NUMBER IN IT}}</h2>
+  <div class="stats">
+    <div class="stat">
+      <div class="num" data-to="3.2" data-decimals="1" data-suffix="x">0</div>
+      <div class="unit">faster reads <span class="delta up">+220%</span></div>
+    </div>
+    <div class="stat">
+      <div class="num" data-to="11" data-suffix="%">0</div>
+      <div class="unit">slower writes <span class="delta down">worth it</span></div>
+    </div>
+  </div>
+  <p>{{The sentence that says why these numbers matter.}}</p>
+</section>
+
+<section class="slide" aria-label="Panels example" data-example>
+  <h2>{{SENTENCE CONTRASTING TWO THINGS}}</h2>
+  <div class="panels">
+    <div class="panel">
+      <h3>{{Old way}}</h3>
+      <p>{{What it does and what it costs.}}</p>
+    </div>
+    <div class="panel">
+      <h3>{{New way}}</h3>
+      <p>{{What changes and what it buys.}}</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Code example" data-example>
+  <h2>{{SENTENCE ABOUT THE MECHANISM}}</h2>
+  <figure>
+    <pre><code><span class="k">func</span> <span class="n">process</span>(msg Message) error {
+<span class="hl">    <span class="n">store</span>.append(msg)</span>
+    <span class="c">...</span>
+    <span class="k">return</span> <span class="n">nil</span>
+}</code></pre>
+    <figcaption><strong>{{Label.}}</strong> {{What the highlighted line accomplishes.}}</figcaption>
+  </figure>
+</section>
+
+<section class="slide center" aria-label="Quote example" data-example>
+  <blockquote class="quote">
+    {{THE SURPRISING CLAIM OR KEY INSIGHT, VERBATIM FROM THE SOURCE}}
+    <span class="who">{{who said it or where it comes from}}</span>
+  </blockquote>
+</section>
+
+<section class="slide center" aria-label="Closing">
+  <h2>{{WHAT THE AUDIENCE SHOULD DO OR REMEMBER}}</h2>
+  <p class="dek">{{One closing line. Contact, link, or the claim restated.}}</p>
+</section>
+
+</div>
+<div class="progress"><span></span></div>
+<div class="counter"></div>
+<div class="hint">arrows to move, E to edit, F for fullscreen</div>
+<div class="toolbar">
+  <button data-act="prev">prev</button>
+  <button data-act="next">next</button>
+  <button data-act="edit">edit</button>
+  <button data-act="grid">grid</button>
+  <button data-act="notes">notes</button>
+  <button data-act="pdf">pdf</button>
+  <button data-act="play">play</button>
+  <button data-act="save">save copy</button>
+</div>
+</div>
+<script>
+{{PASTE runtime.js VERBATIM}}
+</script>
+</body>
+</html>

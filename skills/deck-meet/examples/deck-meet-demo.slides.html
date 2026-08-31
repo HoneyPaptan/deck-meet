@@ -1,0 +1,121 @@
+<section class="slide center" aria-label="Title">
+  <h1>deck-meet</h1>
+  <p class="dek">Markdown in, animated deck out, intent first.</p>
+  <aside class="notes">Open with the promise: any material in, one presentable file out. Mention it works offline.</aside>
+</section>
+
+<section class="slide center" aria-label="The one rule">
+  <blockquote class="quote">
+    Do not design. Assemble.
+    <span class="who">the one rule in SKILL.md</span>
+  </blockquote>
+  <p class="dek">The design decisions are already made. The work left is picking the right visual and writing the sentences.</p>
+</section>
+
+<section class="slide" aria-label="Interview first">
+  <h2>The interview comes before the first pixel</h2>
+  <ol class="steps">
+    <li>Audience: who sits in the room and what they already know</li>
+    <li data-step="1">Occasion and time: the minutes set the slide budget</li>
+    <li data-step="2">Goal: what the room should think, feel, or do after</li>
+    <li data-step="3">Must-land: the one thing that cannot be lost</li>
+  </ol>
+</section>
+
+<section class="slide" aria-label="Approval gate">
+  <h2>Every deck passes an approval gate</h2>
+  <figure>
+    <svg viewBox="0 0 1000 280" role="img" aria-label="A slide plan is approved and built, or sent back for edits">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+      <rect class="box" x="60" y="92" width="160" height="56" rx="6"/>
+      <text class="lbl" x="140" y="126" text-anchor="middle">plan</text>
+      <line class="wire" x1="220" y1="120" x2="372" y2="120" marker-end="url(#arr)"/>
+      <polygon class="box hot" points="500,40 620,120 500,200 380,120"/>
+      <text class="lbl" x="500" y="126" text-anchor="middle">approved?</text>
+      <line class="wire hot" x1="620" y1="120" x2="792" y2="120" marker-end="url(#arr)"/>
+      <text class="sub" x="700" y="106" text-anchor="middle">yes</text>
+      <rect class="box ok" x="800" y="92" width="140" height="56" rx="6"/>
+      <text class="lbl" x="870" y="126" text-anchor="middle">build</text>
+      <path class="wire" d="M 500 200 C 460 260, 200 260, 145 156" fill="none" marker-end="url(#arr)"/>
+      <text class="sub" x="330" y="252" text-anchor="middle">edits</text>
+      <circle class="packet" r="6" style="offset-path: path('M 628 120 L 792 120')"/>
+    </svg>
+    <figcaption><strong>The gate is a mechanism.</strong> Nothing reaches the build step without an explicit yes.</figcaption>
+  </figure>
+  <aside class="notes">Stress that the plan is cheap to change and the build is cheap to redo. The gate exists so nobody sits through slides that miss the point.</aside>
+</section>
+
+<section class="slide" aria-label="Assembly pipeline">
+  <h2>The build is assembly from a fixed system</h2>
+  <figure>
+    <svg viewBox="0 0 1000 220" role="img" aria-label="Source material becomes an approved plan, then slides, with the design system pasted in verbatim">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+      <rect class="box" x="60" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" x="140" y="116" text-anchor="middle">source</text>
+      <rect class="box" x="420" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" x="500" y="116" text-anchor="middle">plan</text>
+      <rect class="box hot pulse" x="780" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" x="860" y="116" text-anchor="middle">deck</text>
+      <line class="wire" x1="220" y1="110" x2="412" y2="110" marker-end="url(#arr2)"/>
+      <line class="wire" x1="580" y1="110" x2="772" y2="110" marker-end="url(#arr2)"/>
+      <line class="wire flow" x1="500" y1="196" x2="500" y2="146"/>
+      <text class="sub" x="500" y="214" text-anchor="middle">css + runtime + motifs, verbatim</text>
+      <circle class="packet" r="6" style="offset-path: path('M 228 110 L 772 110')"/>
+    </svg>
+    <figcaption><strong>Assembly, not invention.</strong> The design system flows into every deck unchanged.</figcaption>
+  </figure>
+</section>
+
+<section class="slide" aria-label="Motion with meaning">
+  <h2>Diagrams move to show the mechanism</h2>
+  <figure>
+    <svg viewBox="0 0 1000 300" role="img" aria-label="The author proposes, the user approves, then the skill builds">
+      <defs>
+        <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+      <text class="lbl" x="200" y="36" text-anchor="middle">agent</text>
+      <text class="lbl" x="500" y="36" text-anchor="middle">user</text>
+      <text class="lbl" x="800" y="36" text-anchor="middle">deck</text>
+      <line class="wire" x1="200" y1="52" x2="200" y2="270" stroke-dasharray="3 5"/>
+      <line class="wire" x1="500" y1="52" x2="500" y2="270" stroke-dasharray="3 5"/>
+      <line class="wire" x1="800" y1="52" x2="800" y2="270" stroke-dasharray="3 5"/>
+      <line class="wire hot draw" style="--i:0" pathLength="1" x1="200" y1="100" x2="492" y2="100" marker-end="url(#arr3)"/>
+      <text class="sub" x="346" y="88" text-anchor="middle">propose plan</text>
+      <line class="wire draw" style="--i:1" pathLength="1" x1="500" y1="160" x2="208" y2="160" marker-end="url(#arr3)"/>
+      <text class="sub" x="346" y="148" text-anchor="middle">approve</text>
+      <line class="wire draw" style="--i:2" pathLength="1" x1="200" y1="220" x2="792" y2="220" marker-end="url(#arr3)"/>
+      <text class="sub" x="496" y="208" text-anchor="middle">build and verify</text>
+    </svg>
+    <figcaption><strong>Arrows draw in causal order.</strong> Motion runs only while the slide is active and never under reduced motion.</figcaption>
+  </figure>
+</section>
+
+<section class="slide" aria-label="Two artifacts">
+  <h2>Two artifacts leave every run</h2>
+  <div class="panels">
+    <div class="panel">
+      <h3>outline.deck.md</h3>
+      <p>Reviewable, diffable, portable. The approved plan as plain markdown, one slide per separator.</p>
+    </div>
+    <div class="panel">
+      <h3>deck.html</h3>
+      <p>One file, no install. Arrow keys to move, F for fullscreen, position survives reload.</p>
+    </div>
+  </div>
+  <p data-step="1">The markdown is the source of truth. The HTML is the show.</p>
+</section>
+
+<section class="slide center" aria-label="Closing">
+  <h2>Bring the material. The skill brings the craft.</h2>
+  <p class="dek">deck-meet is a Claude Code skill. One file in, one deck out.</p>
+</section>
