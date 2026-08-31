@@ -16,8 +16,17 @@ The output is assembled from a small design system, not improvised, so every dec
 
 ## Install
 
+Run these inside Claude Code **one at a time**: each slash command must be its own prompt, and the marketplace dialog accepts only the source. Pasting both lines together fails.
+
+**1. Add the marketplace:**
+
 ```
 /plugin marketplace add HoneyPaptan/deck-meet
+```
+
+**2. Install the plugin:**
+
+```
 /plugin install deck-meet@deck-meet
 ```
 
@@ -25,7 +34,13 @@ Then say "make me a deck about ..." or just `deck-meet` in any Claude Code sessi
 
 ## Demo
 
-Open `skills/deck-meet/examples/deck-meet-demo.html` in a browser. Controls: arrows to move, `O` overview, `N` presenter notes, `E` edit, `F` fullscreen.
+![Title slide](docs/rm-title.png)
+
+![Animated diagram slide with the toolbar](docs/rm-diagram.png)
+
+![Overview grid](docs/rm-grid.png)
+
+Try it yourself: open `skills/deck-meet/examples/deck-meet-demo.html` in a browser. Controls: arrows to move, `O` overview, `N` presenter notes, `E` edit, `F` fullscreen.
 
 ## Theming
 
