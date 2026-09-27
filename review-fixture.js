@@ -115,3 +115,6 @@ const ADMIN_PW = "hunter2";
 
 // SECURITY 21: SQL built by string concatenation.
 export const find = (id) => db.query("SELECT * FROM u WHERE id=" + id);
+
+// SECURITY 22: an unauthenticated admin route.
+app.get("/admin/danger", handler);
