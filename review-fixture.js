@@ -77,3 +77,5 @@ export const go = (req, res) => res.redirect(req.query.next);
 
 // SECURITY 11: XML built by concatenation and parsed with entity expansion on.
 export const parseFeed = (xml) => new DOMParser().parseFromString("<r>" + xml + "</r>", "text/xml");
+
+// fixture pass 1
