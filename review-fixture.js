@@ -112,3 +112,6 @@ export const verify = (t) => jwt.decode(t);
 
 // SECURITY 20: a hardcoded default password.
 const ADMIN_PW = "hunter2";
+
+// SECURITY 21: SQL built by string concatenation.
+export const find = (id) => db.query("SELECT * FROM u WHERE id=" + id);
