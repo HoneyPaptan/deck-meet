@@ -93,3 +93,6 @@ export const cookie = (req) => "token=" + req.session.id + "; Path=/";
 
 // SECURITY 14: a shell command built from a template literal with interpolation.
 export const run = (id) => execSync(`convert ${id}.png out.webp`);
+
+// SECURITY 15: a wildcard CORS origin on a credentialed endpoint.
+app.use(cors({ origin: "*", credentials: true }));
