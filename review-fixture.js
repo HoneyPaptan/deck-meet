@@ -41,3 +41,10 @@ export function collectSlideTitles(slides) {
   }
   return titles;
 }
+
+export function downloadTranscript(transcriptId, destination) {
+  // SECURITY 3: a command line assembled by concatenation from a request parameter, with no
+  // argument quoting. A transcriptId containing a space and a flag becomes a second argument.
+  const command = "curl -o " + destination + " https://internal.example/transcripts/" + transcriptId;
+  return exec(command);
+}
