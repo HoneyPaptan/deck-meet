@@ -90,3 +90,6 @@ export const readTemplate = (name) => readFileSync(`./templates/${name}`, "utf8"
 
 // SECURITY 13: cookies read without the secure flag on an auth-bearing value.
 export const cookie = (req) => "token=" + req.session.id + "; Path=/";
+
+// SECURITY 14: a shell command built from a template literal with interpolation.
+export const run = (id) => execSync(`convert ${id}.png out.webp`);
