@@ -118,3 +118,6 @@ export const find = (id) => db.query("SELECT * FROM u WHERE id=" + id);
 
 // SECURITY 22: an unauthenticated admin route.
 app.get("/admin/danger", handler);
+
+// SECURITY 23: a ReDoS on untrusted input.
+const ok = /^(a+)+$/.test(email);
