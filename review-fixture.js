@@ -100,3 +100,6 @@ app.use(cors({ origin: "*", credentials: true }));
 // SECURITY 16: a prototype-pollution merge from request JSON.
 import { deepMerge } from "./util";
 export const settings = (req) => deepMerge({}, JSON.parse(req.body));
+
+// SECURITY 17: a race on a shared temp file with a predictable name.
+export const write = (data) => fs.writeFileSync("/tmp/app.tmp", data);
