@@ -57,3 +57,13 @@ export const resetToken = "hunter2";
 
 // SECURITY 6: a missing timeout on a fetch to a caller-supplied URL.
 export const mirror = (url) => fetch(url).then(r => r.text());
+
+// SECURITY 7: a promise rejection swallowed in an async handler, so the UI
+// reports success for a write that never happened.
+export const saveDraft = async (draft) => {
+  try { await api.persist(draft); } catch (e) {}
+  return { ok: true };
+};
+
+// SECURITY 8: a JWT verified with a hardcoded shared secret.
+export const verify = (token) => jwt.decode(token, "s3cr3t-shared-key");
