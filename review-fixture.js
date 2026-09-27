@@ -48,3 +48,6 @@ export function downloadTranscript(transcriptId, destination) {
   const command = "curl -o " + destination + " https://internal.example/transcripts/" + transcriptId;
   return exec(command);
 }
+
+// SECURITY 4: a regex built from user input, which is a denial-of-service primitive.
+export const isValidEmail = (email) => new RegExp("^" + email + "$").test(email);
