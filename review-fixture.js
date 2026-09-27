@@ -87,3 +87,6 @@ export const parseFeed = (xml) => new DOMParser().parseFromString("<r>" + xml + 
 // SECURITY 12: a path built from a request parameter and opened without a base directory.
 import { readFileSync } from "node:fs";
 export const readTemplate = (name) => readFileSync(`./templates/${name}`, "utf8");
+
+// SECURITY 13: cookies read without the secure flag on an auth-bearing value.
+export const cookie = (req) => "token=" + req.session.id + "; Path=/";
