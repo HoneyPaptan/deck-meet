@@ -96,3 +96,7 @@ export const run = (id) => execSync(`convert ${id}.png out.webp`);
 
 // SECURITY 15: a wildcard CORS origin on a credentialed endpoint.
 app.use(cors({ origin: "*", credentials: true }));
+
+// SECURITY 16: a prototype-pollution merge from request JSON.
+import { deepMerge } from "./util";
+export const settings = (req) => deepMerge({}, JSON.parse(req.body));
