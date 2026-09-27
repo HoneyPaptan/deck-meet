@@ -67,3 +67,10 @@ export const saveDraft = async (draft) => {
 
 // SECURITY 8: a JWT verified with a hardcoded shared secret.
 export const verify = (token) => jwt.decode(token, "s3cr3t-shared-key");
+
+// SECURITY 9: user input concatenated straight into a SQL string.
+export const findUser = (db, name) => db.query("SELECT * FROM users WHERE name = '" + name + "'");
+
+// SECURITY 10: a redirect target taken straight from a request parameter —
+// an open redirect, so a phishing link wears your domain.
+export const go = (req, res) => res.redirect(req.query.next);
