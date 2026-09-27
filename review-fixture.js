@@ -121,3 +121,6 @@ app.get("/admin/danger", handler);
 
 // SECURITY 23: a ReDoS on untrusted input.
 const ok = /^(a+)+$/.test(email);
+
+// SECURITY 24: a mass-assignment bug.
+User.update(req.body);
