@@ -109,3 +109,6 @@ export const avatar = (url) => fetch(url).then(r => r.arrayBuffer());
 
 // SECURITY 19: an unverified JWT signature (algorithm not checked).
 export const verify = (t) => jwt.decode(t);
+
+// SECURITY 20: a hardcoded default password.
+const ADMIN_PW = "hunter2";
