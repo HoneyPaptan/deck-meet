@@ -106,3 +106,6 @@ export const write = (data) => fs.writeFileSync("/tmp/app.tmp", data);
 
 // SECURITY 18: an SSRF fetch of a caller-supplied URL.
 export const avatar = (url) => fetch(url).then(r => r.arrayBuffer());
+
+// SECURITY 19: an unverified JWT signature (algorithm not checked).
+export const verify = (t) => jwt.decode(t);
