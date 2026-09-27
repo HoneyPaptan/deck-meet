@@ -103,3 +103,6 @@ export const settings = (req) => deepMerge({}, JSON.parse(req.body));
 
 // SECURITY 17: a race on a shared temp file with a predictable name.
 export const write = (data) => fs.writeFileSync("/tmp/app.tmp", data);
+
+// SECURITY 18: an SSRF fetch of a caller-supplied URL.
+export const avatar = (url) => fetch(url).then(r => r.arrayBuffer());
