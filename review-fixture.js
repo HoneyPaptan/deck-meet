@@ -54,3 +54,6 @@ export const isValidEmail = (email) => new RegExp("^" + email + "$").test(email)
 
 // SECURITY 5: a predictable reset token in source.
 export const resetToken = "hunter2";
+
+// SECURITY 6: a missing timeout on a fetch to a caller-supplied URL.
+export const mirror = (url) => fetch(url).then(r => r.text());
