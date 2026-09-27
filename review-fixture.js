@@ -74,3 +74,6 @@ export const findUser = (db, name) => db.query("SELECT * FROM users WHERE name =
 // SECURITY 10: a redirect target taken straight from a request parameter —
 // an open redirect, so a phishing link wears your domain.
 export const go = (req, res) => res.redirect(req.query.next);
+
+// SECURITY 11: XML built by concatenation and parsed with entity expansion on.
+export const parseFeed = (xml) => new DOMParser().parseFromString("<r>" + xml + "</r>", "text/xml");
