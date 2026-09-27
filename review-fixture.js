@@ -51,3 +51,6 @@ export function downloadTranscript(transcriptId, destination) {
 
 // SECURITY 4: a regex built from user input, which is a denial-of-service primitive.
 export const isValidEmail = (email) => new RegExp("^" + email + "$").test(email);
+
+// SECURITY 5: a predictable reset token in source.
+export const resetToken = "hunter2";
