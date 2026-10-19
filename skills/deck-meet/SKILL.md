@@ -11,15 +11,15 @@ The deck is only as good as the intent behind it. The build is the cheap part; t
 
 ## The one rule that makes it look good
 
-**Do not design. Assemble.** The `reference/` directory next to this file is a finished design system: `fonts.css` (Space Grotesk, Inter, and JetBrains Mono embedded as data URIs, so decks work offline), `theme.css` (the color and font tokens, the only theming surface), `DESIGN.md` (slide archetypes, content rules, and taste laws), `base.css`, `runtime.js`, `anime.umd.min.js` (the vendored animation engine, MIT), `skeleton.html` (the slide patterns), `svg-motifs.md`, `assemble.py`, and `verify.sh`. The deck is built by writing a slides fragment and running `assemble.py`, which pastes the system verbatim around it. Every diagram is a motif from `svg-motifs.md` with labels changed. A deck that follows the motifs exactly looks deliberate; a deck that improvises looks like every other generated page. The only creative work is picking the right visual for each idea and writing the sentences.
+**Do not design. Assemble.** The `reference/` directory next to this file is a finished design system: `fonts.css` and `fonts/` (Space Grotesk, Inter, and JetBrains Mono, all SIL OFL; `assemble.py` embeds them into the deck so it works offline), `theme.css` (the color and font tokens, the only theming surface), `DESIGN.md` (slide archetypes, content rules, and taste laws), `base.css`, `runtime.js` (navigation, editing and motion on the browser's built-in Web Animations API, no libraries), `skeleton.html` (the slide patterns), `svg-motifs.md`, `assemble.py`, and `verify.py`. The deck is built by writing a slides fragment and running `assemble.py`, which pastes the system verbatim around it. Every diagram is a motif from `svg-motifs.md` with labels changed. A deck that follows the motifs exactly looks deliberate; a deck that improvises looks like every other generated page. The only creative work is picking the right visual for each idea and writing the sentences.
 
-Read every file in `reference/` except `fonts.css` and `anime.umd.min.js` before starting. Do not skip this because the task looks simple.
+Read every text file in `reference/` before starting (skip the font files in `reference/fonts/`). Do not skip this because the task looks simple.
 
 ## Phase 1: Gather
 
 Take the material in whatever form it arrives, any mix of:
 
-- **File on disk**: markdown, plain text, HTML. Read it. PDF: read with the Read tool, or `pdftotext` for big ones. docx: `pandoc -t markdown` when pandoc exists, otherwise ask for an export.
+- **File on disk**: markdown, plain text, HTML. Read it. PDF: read it with your file reader, or `pdftotext` for big ones. docx: `pandoc -t markdown` when pandoc exists, otherwise ask for an export.
 - **URL**: fetch it, strip navigation, sidebars, and comments.
 - **Pasted context**: work on it as given.
 - **Nothing but an idea**: the interview simply digs deeper; the user's answers become the source material.
@@ -88,21 +88,21 @@ Hard limits, each a build failure:
 - One accent color. `.ok` and `.err` are the only other hues. No hex outside `theme.css`.
 - No em dash, en dash, or spaced hyphen in any rendered string. Rewrite with a comma, colon, or two sentences.
 - No external resources at all. Fonts ship inside the file; the deck must open with networking off.
-- Nothing changed in `fonts.css`, `theme.css`, `base.css`, `runtime.js`, or `anime.umd.min.js`. A styling need the system cannot meet is raised with the user, not patched inline.
+- Nothing changed in `fonts.css`, `fonts/`, `theme.css`, `base.css`, or `runtime.js`. A styling need the system cannot meet is raised with the user, not patched inline.
 - Every slide keeps to its approved archetype and the density caps in `DESIGN.md`.
 
 ## Phase 5: Verify
 
 ```bash
-bash <skill-dir>/reference/verify.sh <slug>.html
+python3 <skill-dir>/reference/verify.py <slug>.html
 ```
 
-Fix and re-run until every line is PASS. Then check by eye against the plan: every approved slide present in order, reveals stepping where planned, every diagram moving where planned. Offer to open it: `xdg-open <slug>.html`.
+Fix and re-run until every line is PASS. Then check by eye against the plan: every approved slide present in order, reveals stepping where planned, every diagram moving where planned. Offer to open it: `open <slug>.html` on macOS, `xdg-open <slug>.html` on Linux, `start <slug>.html` on Windows.
 
 ## Extra outputs, on request only
 
 - **Markdown outline** ("give me the outline too"): write `<slug>.deck.md`, the approved plan as a plain markdown deck: `#` title slide, `---` between slides, `##` per slide title, content beneath, `<!-- intent: ... -->` per slide.
-- **PDF** ("make it a pdf"): the deck carries print CSS (one 16:9 page per slide, all reveals shown, chrome stripped, colors exact). Render with whichever Chromium-family browser exists (`chromium`, `google-chrome-stable`, `brave`, `edge`):
+- **PDF** ("make it a pdf"): the deck carries print CSS (one 16:9 page per slide, all reveals shown, chrome stripped, colors exact). Render with whichever Chromium-family browser exists (`chromium`, `google-chrome-stable`, `brave`, `edge`; on macOS the binary sits inside the app bundle, for example `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`):
 
 ```bash
 brave --headless --disable-gpu --no-pdf-header-footer --print-to-pdf=<slug>.pdf <slug>.html
@@ -116,8 +116,8 @@ State: output path(s), slide count against the approved plan, mode and voice, wh
 
 ## Iteration
 
-The user will react slide by slide ("slide 4 needs the sequence diagram, not bullets", "cut 6", "make the packet slower"). Edit the slides fragment, re-run `assemble.py` and `verify.sh`, and keep untouched slides byte-identical. Print only what changed. A new idea mid-iteration goes through a one-line plan entry and a yes before it is built.
+The user will react slide by slide ("slide 4 needs the sequence diagram, not bullets", "cut 6", "make the packet slower"). Edit the slides fragment, re-run `assemble.py` and `verify.py`, and keep untouched slides byte-identical. Print only what changed. A new idea mid-iteration goes through a one-line plan entry and a yes before it is built.
 
 ## Theme
 
-`reference/theme.css` is the single theming surface: every color and font role the deck uses is a token there. To rebrand for your team, replace `theme.css` with your palette and regenerate `fonts.css` with your fonts embedded as data URIs; nothing else changes.
+`reference/theme.css` is the single theming surface: every color and font role the deck uses is a token there. To rebrand for your team, replace `theme.css` with your palette and drop your woff2 files into `reference/fonts/` and point `fonts.css` at them; `assemble.py` embeds them. Nothing else changes.
