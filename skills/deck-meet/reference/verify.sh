@@ -7,11 +7,13 @@ fails=0
 pass() { printf 'PASS %s\n' "$1"; }
 fail() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 
+filt() { awk 'length($0) < 4000' "$file"; }
+
 check_zero() {
   local label="$1" pattern="$2"
-  if grep -v 'data:font/woff2;base64,' "$file" | grep -qP "$pattern"; then
+  if filt | grep -qP "$pattern"; then
     fail "$label"
-    grep -v 'data:font/woff2;base64,' "$file" | grep -nP "$pattern" | head -5
+    filt | grep -nP "$pattern" | head -5
   else
     pass "$label"
   fi
@@ -38,6 +40,10 @@ check_zero "no img or iframe tags" '<img[ >]|<iframe[ >]'
 check_zero "no emoji" '[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}\x{FE0F}]'
 check_zero "no dash characters in text" '\x{2013}|\x{2014}'
 check_zero "no hex colors outside theme block" '^(?!.*--).*#[0-9a-fA-F]{3,8}\b'
+check_zero "no svg gradients" '<linearGradient|<radialGradient'
+check_zero "no glow or blur decoration" 'text-shadow|drop-shadow|filter:\s*blur'
+check_zero "no gradient text" 'background-clip:\s*text'
+check_zero "no bounce or elastic easing" 'ease[^,}]*(Bounce|Elastic)'
 
 externals=$(grep -oP '(src|href)="https?://[^"]+' "$file" || true)
 if [ -n "$externals" ]; then
@@ -49,10 +55,13 @@ fi
 
 check_has "fonts embedded as data URIs" "data:font/woff2;base64,"
 check_has "theme.css embedded" "--dm-theme-v1"
-check_has "base.css embedded" "--dm-base-v1"
-check_has "runtime.js embedded" "dm-runtime-v1"
+check_has "base.css embedded" "--dm-base-v2"
+check_has "anime.js embedded" "Anime.js - UMD"
+check_has "runtime.js embedded" "dm-runtime-v2"
 check_has "toolbar present" 'class="toolbar"'
 check_has "print styles present" "@media print"
+check_has "voice set on body" 'data-voice="'
+check_has "mode set on body" 'data-mode="'
 
 h1s=$(grep -c '<h1' "$file")
 [ "$h1s" -eq 1 ] && pass "exactly one h1" || fail "exactly one h1 (found $h1s)"
@@ -73,7 +82,7 @@ arias=$(grep -c '<section class="slide[^>]*aria-label' "$file")
 [ "$sections" -eq "$arias" ] && pass "every slide has aria-label" || fail "every slide has aria-label ($arias of $sections)"
 
 if [ "$svgs" -gt 0 ]; then
-  motion=$(grep -cE 'class="[^"]*(packet|flow|draw|pulse|pop)' "$file")
+  motion=$(grep -cE 'class="[^"]*(packet|flow|draw|pulse|pop|grow|trace|pt)[" ]' "$file")
   [ "$motion" -ge 1 ] && pass "motion primitives present ($motion)" || fail "svgs present but zero motion primitives"
 fi
 

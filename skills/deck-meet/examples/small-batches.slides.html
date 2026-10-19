@@ -1,0 +1,188 @@
+<section class="slide center" aria-label="Title">
+  <h1>Small batches win</h1>
+  <p class="dek">Half the review pain, twice the flow. Ship in small pieces.</p>
+  <aside class="notes">Open with the promise: nothing here needs new tools, only a habit change in how work is cut.</aside>
+</section>
+
+<section class="slide" aria-label="The claim">
+  <div class="cols">
+    <div>
+      <p class="eyebrow">the claim</p>
+      <h2 class="statement">Big changes don't get reviewed. They get skimmed.</h2>
+    </div>
+    <figure>
+      <svg viewBox="0 0 1000 300" role="img" aria-label="A change grows outward in waves until nobody can hold its outline">
+        <polygon class="wire echo far" points="360,150 400,90 500,66 600,90 640,150 600,210 500,234 400,210"/>
+        <polygon class="wire echo" points="380,150 416,96 500,74 584,96 620,150 584,204 500,226 416,204"/>
+        <polygon class="wire hot" points="400,150 432,102 500,82 568,102 600,150 568,198 500,218 432,198"/>
+      </svg>
+      <figcaption><strong>Scope creep, drawn.</strong> Every extra wave is another hour a reviewer does not have.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" aria-label="Review speed stat">
+  <div class="cols">
+    <div class="bigstat">
+      <p class="ctx">900 to 220 lines per change</p>
+      <div class="bignum" data-to="4" data-suffix="x">0</div>
+      <div class="unit">faster first review</div>
+    </div>
+    <figure>
+      <svg viewBox="0 0 1000 260" role="img" aria-label="Small changes wait hours for review, large ones wait days">
+        <text class="lbl" x="60" y="66">under 200</text>
+        <rect class="bar hot grow" x="260" y="44" width="180" height="36" rx="4"/>
+        <text class="lbl" x="456" y="68">3 h</text>
+        <text class="lbl" x="60" y="146">200 to 600</text>
+        <rect class="bar grow" x="260" y="124" width="380" height="36" rx="4"/>
+        <text class="lbl" x="656" y="148">1.5 d</text>
+        <text class="lbl" x="60" y="226">over 600</text>
+        <rect class="bar grow" x="260" y="204" width="660" height="36" rx="4"/>
+        <text class="lbl" x="936" y="228" text-anchor="end">4 d</text>
+      </svg>
+      <figcaption><strong>Wait time by change size.</strong> Example team data; measure your own, the shape holds.</figcaption>
+    </figure>
+  </div>
+  <aside class="notes">The number that matters is the first one: a small change gets picked up the same afternoon.</aside>
+</section>
+
+<section class="slide" aria-label="Flow diagram">
+  <h2>A small change clears every gate the same day</h2>
+  <figure>
+    <svg viewBox="0 0 1000 220" role="img" aria-label="A change moves from written to reviewed to merged, one gate at a time">
+      <defs>
+        <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+        </marker>
+        <marker id="arrAh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+        </marker>
+      </defs>
+      <rect class="box" x="60" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" x="140" y="116" text-anchor="middle">written</text>
+      <line class="wire" x1="220" y1="110" x2="412" y2="110" marker-end="url(#arrA)"/>
+      <rect class="box hot" data-step="1" x="420" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" data-step="1" x="500" y="116" text-anchor="middle">reviewed</text>
+      <line class="wire hot draw" data-step="2" pathLength="1" x1="580" y1="110" x2="772" y2="110" marker-end="url(#arrAh)"/>
+      <rect class="box ok" data-step="2" x="780" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" data-step="2" x="860" y="116" text-anchor="middle">merged</text>
+      <circle class="packet" r="6" style="offset-path: path('M 236 110 L 396 110')"/>
+    </svg>
+    <figcaption><strong>One gate per beat.</strong> The reviewer appears, then the merge draws itself.</figcaption>
+  </figure>
+  <aside class="notes">Advance twice here. Point out that the whole loop fits inside one working day when the diff is small.</aside>
+</section>
+
+<section class="slide" aria-label="Defect chart">
+  <h2>Defects escape when reviews skim</h2>
+  <figure>
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Escaped defects climb with change size while small batches stay flat">
+      <line class="gridline" x1="120" y1="50" x2="120" y2="240"/>
+      <line class="gridline" x1="120" y1="240" x2="940" y2="240"/>
+      <line class="gridline" x1="120" y1="145" x2="940" y2="145"/>
+      <line class="gridline" x1="120" y1="50" x2="940" y2="50"/>
+      <text class="axis" x="100" y="245" text-anchor="end">0</text>
+      <text class="axis" x="100" y="150" text-anchor="end">6</text>
+      <text class="axis" x="100" y="55" text-anchor="end">12</text>
+      <text class="axis" x="530" y="284" text-anchor="middle">lines changed per review</text>
+      <path class="trace hot" d="M 180 216 L 430 178 L 680 118 L 900 74"/>
+      <path class="trace" d="M 180 224 L 430 218 L 680 214 L 900 212"/>
+      <rect class="pt hot" x="176" y="212" width="8" height="8"/>
+      <rect class="pt hot" x="426" y="174" width="8" height="8"/>
+      <rect class="pt hot" x="676" y="114" width="8" height="8"/>
+      <rect class="pt hot" x="896" y="70" width="8" height="8"/>
+      <rect class="pt" x="176" y="220" width="8" height="8"/>
+      <rect class="pt" x="426" y="214" width="8" height="8"/>
+      <rect class="pt" x="676" y="210" width="8" height="8"/>
+      <rect class="pt" x="896" y="208" width="8" height="8"/>
+    </svg>
+    <figcaption><strong>Escaped defects per month.</strong> Attention is a budget; a giant diff spends it in the first 400 lines.</figcaption>
+  </figure>
+  <div class="legend">
+    <span><span class="chip hot"></span>large batches</span>
+    <span><span class="chip"></span>small batches</span>
+  </div>
+</section>
+
+<section class="slide" aria-label="Big change bounce">
+  <h2>A big change bounces for days</h2>
+  <figure>
+    <svg viewBox="0 0 1000 320" role="img" aria-label="The author sends a huge diff, review comments bounce back, rework starts over">
+      <defs>
+        <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+      <text class="lbl" x="200" y="36" text-anchor="middle">author</text>
+      <text class="lbl" x="500" y="36" text-anchor="middle">reviewer</text>
+      <text class="lbl" x="800" y="36" text-anchor="middle">main</text>
+      <line class="wire" x1="200" y1="52" x2="200" y2="290" stroke-dasharray="3 5"/>
+      <line class="wire" x1="500" y1="52" x2="500" y2="290" stroke-dasharray="3 5"/>
+      <line class="wire" x1="800" y1="52" x2="800" y2="290" stroke-dasharray="3 5"/>
+      <line class="wire hot draw" style="--i:0" pathLength="1" x1="200" y1="100" x2="492" y2="100" marker-end="url(#arrB)"/>
+      <text class="sub" x="346" y="88" text-anchor="middle">2400 line diff</text>
+      <line class="wire err draw" style="--i:1" pathLength="1" x1="500" y1="170" x2="208" y2="170" marker-end="url(#arrB)"/>
+      <text class="sub" x="346" y="158" text-anchor="middle">40 comments, day 3</text>
+      <line class="wire draw" style="--i:2" pathLength="1" x1="200" y1="240" x2="492" y2="240" marker-end="url(#arrB)"/>
+      <text class="sub" x="346" y="228" text-anchor="middle">rework, start again</text>
+    </svg>
+    <figcaption><strong>Nothing reaches main.</strong> The third arrow points back into review, not forward.</figcaption>
+  </figure>
+</section>
+
+<section class="slide center" aria-label="Section: the habit">
+  <p class="ctx">the habit</p>
+  <h2>Cutting work small is a skill, not a rule</h2>
+  <div class="dots"></div>
+</section>
+
+<section class="slide" aria-label="What small means">
+  <h2>What small means in practice</h2>
+  <ul class="rows">
+    <li><span class="idx">01</span>One concern per change, named in the title</li>
+    <li data-step="1"><span class="idx">02</span>Tests ride in the same change, never a follow-up</li>
+    <li data-step="2"><span class="idx">03</span>The description says why, the diff says what</li>
+    <li data-step="3"><span class="idx">04</span>Anything unrelated you touched gets its own change</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Same work, cut differently">
+  <h2>The same work, cut differently</h2>
+  <div class="panels">
+    <div class="panel">
+      <h3>One two-week branch</h3>
+      <p>Merges once, conflicts with everything, reviewed in one exhausted afternoon, reverted as a block when anything breaks.</p>
+    </div>
+    <div class="panel">
+      <h3>Eight daily changes</h3>
+      <p>Each lands the day it is written, each is revertable alone, and the eighth is shaped by feedback from the first.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Payoff stats">
+  <h2>The payoff compounds within a sprint</h2>
+  <div class="stats">
+    <div class="stat">
+      <div class="num" data-to="2.4" data-decimals="1" data-suffix="x">0</div>
+      <div class="unit">merge frequency <span class="delta up">same headcount</span></div>
+    </div>
+    <div class="stat">
+      <div class="num" data-to="38" data-suffix="%">0</div>
+      <div class="unit">less rework <span class="delta up">earlier feedback</span></div>
+    </div>
+  </div>
+  <p>Feedback arrives while the context is still warm, so corrections cost minutes instead of days.</p>
+</section>
+
+<section class="slide center" aria-label="Quote">
+  <blockquote class="quote">
+    If it hurts, do it more often.
+    <span class="who">Martin Fowler, on integration pain</span>
+  </blockquote>
+</section>
+
+<section class="slide center" aria-label="Closing">
+  <h2>Cut the next change in half</h2>
+  <p class="dek">Not the roadmap, not the process. Just the next change.</p>
+</section>

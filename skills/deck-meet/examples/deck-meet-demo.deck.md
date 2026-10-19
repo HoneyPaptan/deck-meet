@@ -49,6 +49,41 @@ A packet rides the wire, arrows draw in causal order, and the component doing th
 
 ---
 
+## One accent, mono for data, hairlines for structure
+
+Everything else is whitespace. The taste laws live in DESIGN.md and the verifier enforces the checkable ones.
+
+<!-- intent: show the statement archetype and the echo trace motif -->
+
+---
+
+## 27 automated checks, every build
+
+The verifier grew from 17 to 27 checks across three releases while failures held at zero.
+
+<!-- intent: show the stat archetype with a supporting series chart -->
+
+---
+
+## Every deck ships the same guarantees
+
+1. Opens offline, fonts and runtime inside the file
+2. Prints to exact 16:9 pages with every reveal shown
+3. Respects reduced motion and pauses off-screen
+4. Edits in place and saves a copy with edits baked in
+
+<!-- intent: show the numbered rows archetype with stepped reveals -->
+
+---
+
+## Diagrams reveal one cause at a time
+
+The gateway appears first, then the wire draws itself into the store. Arrow presses in talk mode, scroll beats in story mode.
+
+<!-- intent: show step staging inside an svg diagram -->
+
+---
+
 ## Two artifacts leave every run
 
 - A markdown outline: reviewable, diffable, portable

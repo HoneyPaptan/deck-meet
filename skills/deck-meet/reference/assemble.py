@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-import sys
+import argparse
 from pathlib import Path
+
+VOICES = ("display", "editorial", "mono", "contrast", "numbered")
+MODES = ("talk", "story")
 
 HEAD = """<!doctype html>
 <html lang="en">
@@ -14,7 +17,7 @@ HEAD = """<!doctype html>
 {base}
 </style>
 </head>
-<body>
+<body data-voice="{voice}" data-mode="{mode}">
 <div class="deck">
 <div class="stage">
 
@@ -37,6 +40,9 @@ TAIL = """
 </div>
 </div>
 <script>
+{anime}
+</script>
+<script>
 {runtime}
 </script>
 </body>
@@ -45,24 +51,29 @@ TAIL = """
 
 
 def main():
-    if len(sys.argv) != 4:
-        print("usage: assemble.py <title> <slides-fragment.html> <out.html>")
-        sys.exit(2)
-    title, slides_path, out_path = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
+    ap = argparse.ArgumentParser()
+    ap.add_argument("title")
+    ap.add_argument("slides", type=Path)
+    ap.add_argument("out", type=Path)
+    ap.add_argument("--voice", choices=VOICES, default="display")
+    ap.add_argument("--mode", choices=MODES, default="talk")
+    args = ap.parse_args()
     ref = Path(__file__).parent
     read = lambda name: (ref / name).read_text()
     html = (
         HEAD.format(
-            title=title,
+            title=args.title,
+            voice=args.voice,
+            mode=args.mode,
             fonts=read("fonts.css"),
             theme=read("theme.css"),
             base=read("base.css"),
         )
-        + slides_path.read_text().strip()
-        + TAIL.format(runtime=read("runtime.js"))
+        + args.slides.read_text().strip()
+        + TAIL.format(anime=read("anime.umd.min.js"), runtime=read("runtime.js"))
     )
-    out_path.write_text(html)
-    print(f"{out_path} ({len(html)} bytes)")
+    args.out.write_text(html)
+    print(f"{args.out} ({len(html)} bytes, voice={args.voice}, mode={args.mode})")
 
 
 main()

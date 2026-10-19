@@ -100,6 +100,91 @@
   </figure>
 </section>
 
+<section class="slide" aria-label="Taste">
+  <div class="cols">
+    <div>
+      <p class="eyebrow">design.md</p>
+      <h2 class="statement">One accent, mono for data, hairlines for structure. Everything else is whitespace.</h2>
+    </div>
+    <figure>
+      <svg viewBox="0 0 1000 300" role="img" aria-label="The system holds its shape while the content changes around it">
+        <polygon class="wire echo far" points="360,150 400,90 500,66 600,90 640,150 600,210 500,234 400,210"/>
+        <polygon class="wire echo" points="380,150 416,96 500,74 584,96 620,150 584,204 500,226 416,204"/>
+        <polygon class="wire hot" points="400,150 432,102 500,82 568,102 600,150 568,198 500,218 432,198"/>
+      </svg>
+      <figcaption><strong>Echo trace motif.</strong> Motion history as offset outlines, stroke only.</figcaption>
+    </figure>
+  </div>
+  <aside class="notes">The taste laws are checkable: the verifier greps for gradients, glows, and blur and fails the build if any appear.</aside>
+</section>
+
+<section class="slide" aria-label="Verifier stat">
+  <div class="cols">
+    <div class="bigstat">
+      <p class="ctx">every build, before handoff</p>
+      <div class="bignum" data-to="27">0</div>
+      <div class="unit">automated checks</div>
+    </div>
+    <figure>
+      <svg viewBox="0 0 1000 300" role="img" aria-label="Checks grew from 17 to 27 across three releases while failures held at zero">
+        <line class="gridline" x1="120" y1="50" x2="120" y2="240"/>
+        <line class="gridline" x1="120" y1="240" x2="940" y2="240"/>
+        <line class="gridline" x1="120" y1="145" x2="940" y2="145"/>
+        <line class="gridline" x1="120" y1="50" x2="940" y2="50"/>
+        <text class="axis" x="100" y="245" text-anchor="end">0</text>
+        <text class="axis" x="100" y="150" text-anchor="end">15</text>
+        <text class="axis" x="100" y="55" text-anchor="end">30</text>
+        <text class="axis" x="530" y="284" text-anchor="middle">release</text>
+        <path class="trace hot" d="M 180 133 L 530 114 L 880 70"/>
+        <path class="trace" d="M 180 240 L 530 240 L 880 240"/>
+        <rect class="pt hot" x="176" y="129" width="8" height="8"/>
+        <rect class="pt hot" x="526" y="110" width="8" height="8"/>
+        <rect class="pt hot" x="876" y="66" width="8" height="8"/>
+        <rect class="pt" x="176" y="236" width="8" height="8"/>
+        <rect class="pt" x="526" y="236" width="8" height="8"/>
+        <rect class="pt" x="876" y="236" width="8" height="8"/>
+      </svg>
+      <figcaption><strong>Series chart motif.</strong> Dotted grid, mono axes, the subject series in accent.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" aria-label="What a deck carries">
+  <h2>Every deck ships the same guarantees</h2>
+  <ul class="rows">
+    <li><span class="idx">01</span>Opens offline, fonts and runtime inside the file</li>
+    <li data-step="1"><span class="idx">02</span>Prints to exact 16:9 pages with every reveal shown</li>
+    <li data-step="2"><span class="idx">03</span>Respects reduced motion and pauses off-screen</li>
+    <li data-step="3"><span class="idx">04</span>Edits in place and saves a copy with edits baked in</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Step-synced diagram">
+  <h2>Diagrams reveal one cause at a time</h2>
+  <figure>
+    <svg viewBox="0 0 1000 220" role="img" aria-label="The gateway appears first, then the wire to the store draws itself">
+      <defs>
+        <marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/>
+        </marker>
+        <marker id="arr4h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+        </marker>
+      </defs>
+      <rect class="box" x="60" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" x="140" y="116" text-anchor="middle">client</text>
+      <line class="wire" x1="220" y1="110" x2="412" y2="110" marker-end="url(#arr4)"/>
+      <rect class="box hot" data-step="1" x="420" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" data-step="1" x="500" y="116" text-anchor="middle">gateway</text>
+      <line class="wire hot draw" data-step="2" pathLength="1" x1="580" y1="110" x2="772" y2="110" marker-end="url(#arr4h)"/>
+      <rect class="box" data-step="2" x="780" y="82" width="160" height="56" rx="6"/>
+      <text class="lbl" data-step="2" x="860" y="116" text-anchor="middle">store</text>
+    </svg>
+    <figcaption><strong>Steps inside the svg.</strong> Arrow presses in talk mode, scroll beats in story mode, same markup.</figcaption>
+  </figure>
+  <aside class="notes">Press the arrow twice here: first the gateway pops in, then the wire draws itself into the store.</aside>
+</section>
+
 <section class="slide" aria-label="Two artifacts">
   <h2>Two artifacts leave every run</h2>
   <div class="panels">

@@ -10,7 +10,7 @@
 {{PASTE base.css VERBATIM}}
 </style>
 </head>
-<body>
+<body data-voice="{{display|editorial|mono|contrast|numbered}}" data-mode="{{talk|story}}">
 <div class="deck">
 <div class="stage">
 
@@ -27,6 +27,42 @@
     <figcaption><strong>{{Label, 3 to 6 words.}}</strong> {{One sentence on what the picture shows that prose cannot.}}</figcaption>
   </figure>
   <aside class="notes">{{SPEAKER NOTES, OPTIONAL: what to say over this slide. Never rendered on the slide or in the PDF; shown in the presenter window (N key).}}</aside>
+</section>
+
+<section class="slide" aria-label="Statement example" data-example>
+  <div class="cols">
+    <div>
+      <p class="eyebrow">{{SUBJECT, ONE OR TWO WORDS}}</p>
+      <h2 class="statement">{{THE CLAIM, UPPERCASE BY CSS, MAX 20 WORDS}}</h2>
+    </div>
+    <figure>
+      {{LINE-ART SVG, ECHO MOTIF OR MECHANISM}}
+      <figcaption><strong>{{Label.}}</strong> {{One sentence.}}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" aria-label="Big stat example" data-example>
+  <div class="cols">
+    <div class="bigstat">
+      <p class="ctx">{{27 -&gt; 14 KN-M}}</p>
+      <div class="bignum" data-to="-48" data-suffix="%">0</div>
+      <div class="unit">{{quiet noun, lowercase}}</div>
+    </div>
+    <figure>
+      {{OPTIONAL SUPPORTING CHART, MOTIF 9}}
+      <figcaption><strong>{{Label.}}</strong> {{One sentence.}}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="slide" aria-label="Numbered rows example" data-example>
+  <h2>{{SENTENCE}}</h2>
+  <ul class="rows">
+    <li><span class="idx">01</span>{{One line, three to six rows total}}</li>
+    <li data-step="1"><span class="idx">02</span>{{Appears on first arrow press or scroll beat}}</li>
+    <li data-step="2"><span class="idx">03</span>{{Appears on second}}</li>
+  </ul>
 </section>
 
 <section class="slide" aria-label="Reveal example" data-example>
@@ -106,6 +142,9 @@
   <button data-act="save">save copy</button>
 </div>
 </div>
+<script>
+{{PASTE anime.umd.min.js VERBATIM}}
+</script>
 <script>
 {{PASTE runtime.js VERBATIM}}
 </script>

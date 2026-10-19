@@ -1,6 +1,6 @@
 (() => {
   if (window.__deckMeet) return;
-  window.__deckMeet = "dm-runtime-v1";
+  window.__deckMeet = "dm-runtime-v2";
 
   const stage = document.querySelector(".stage");
   const slides = [...stage.querySelectorAll(".slide")];
@@ -10,6 +10,8 @@
   const toolbar = document.querySelector(".toolbar");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isPresenter = new URLSearchParams(location.search).has("presenter");
+  const story = document.body.dataset.mode === "story" && !isPresenter;
+  const am = window.anime;
   const bc = "BroadcastChannel" in window ? new BroadcastChannel("dm-" + document.title) : null;
   let index = 0;
   let editing = false;
@@ -102,9 +104,106 @@
       (a, b) => Number(a.dataset.step) - Number(b.dataset.step)
     );
 
+  const stepGroups = (slide) => {
+    const groups = new Map();
+    stepsOf(slide).forEach((el) => {
+      const v = el.dataset.step;
+      if (!groups.has(v)) groups.set(v, []);
+      groups.get(v).push(el);
+    });
+    return [...groups.values()];
+  };
+
   const stagger = () => {
     slides.forEach((slide) => {
       [...slide.children].forEach((el, i) => el.style.setProperty("--i", i));
+    });
+  };
+
+  const clearAnim = (el) => {
+    [
+      "opacity",
+      "transform",
+      "transition",
+      "transform-box",
+      "transform-origin",
+      "stroke-dasharray",
+      "stroke-dashoffset",
+    ].forEach((p) => el.style.removeProperty(p));
+  };
+
+  const drawable = (el) =>
+    el.ownerSVGElement && el.matches("path, line, polyline") && el.classList.contains("draw");
+
+  const showStep = (el) => {
+    if (el.classList.contains("shown")) return;
+    el.classList.add("shown");
+    if (!am || reduced || editing) return;
+    el.style.transition = "none";
+    if (drawable(el)) {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      const [d] = am.svg.createDrawable(el);
+      am.animate(d, { draw: "0 1", duration: 700, ease: "outQuart" });
+    } else if (el.ownerSVGElement) {
+      el.style.transformBox = "fill-box";
+      el.style.transformOrigin = "center";
+      am.animate(el, { opacity: [0, 1], scale: [0.86, 1], duration: 450, ease: "outQuart" });
+    } else {
+      am.animate(el, { opacity: [0, 1], translateY: [14, 0], duration: 450, ease: "outQuart" });
+    }
+  };
+
+  const hideStep = (el) => {
+    if (!el.classList.contains("shown")) return;
+    el.classList.remove("shown");
+    clearAnim(el);
+  };
+
+  const chartTargets = (slide) => ({
+    grows: [...slide.querySelectorAll(".grow:not([data-step])")],
+    pts: [...slide.querySelectorAll(".pt:not([data-step])")],
+    traces: [...slide.querySelectorAll(".trace:not([data-step])")],
+  });
+
+  const settleCharts = (root) => {
+    (root || document)
+      .querySelectorAll(".grow, .pt, .trace")
+      .forEach((el) => clearAnim(el));
+  };
+
+  const animateCharts = (slide) => {
+    const { grows, pts, traces } = chartTargets(slide);
+    if (!am || reduced || editing) {
+      settleCharts(slide);
+      return;
+    }
+    grows.forEach((el) => {
+      el.style.transformBox = "fill-box";
+      el.style.transformOrigin = el.dataset.origin || "left center";
+    });
+    if (grows.length)
+      am.animate(grows, {
+        scaleX: [0, 1],
+        duration: 800,
+        ease: "outQuart",
+        delay: am.stagger(90),
+      });
+    pts.forEach((el) => {
+      el.style.transformBox = "fill-box";
+      el.style.transformOrigin = "center";
+    });
+    if (pts.length)
+      am.animate(pts, {
+        opacity: [0, 1],
+        scale: [0.5, 1],
+        duration: 340,
+        ease: "outQuart",
+        delay: am.stagger(26),
+      });
+    traces.forEach((el, i) => {
+      const [d] = am.svg.createDrawable(el);
+      am.animate(d, { draw: "0 1", duration: 1000, ease: "outQuart", delay: i * 140 });
     });
   };
 
@@ -114,12 +213,12 @@
 
   const settleCounters = () => {
     document
-      .querySelectorAll(".num[data-to]")
+      .querySelectorAll(".num[data-to], .bignum[data-to]")
       .forEach((el) => (el.textContent = finalText(el)));
   };
 
   const countUp = (slide) => {
-    slide.querySelectorAll(".num[data-to]").forEach((el) => {
+    slide.querySelectorAll(".num[data-to], .bignum[data-to]").forEach((el) => {
       if (reduced || editing) {
         el.textContent = finalText(el);
         return;
@@ -129,7 +228,7 @@
       const suffix = el.dataset.suffix || "";
       const t0 = performance.now();
       const tick = (t) => {
-        const p = Math.min((t - t0) / 900, 1);
+        const p = Math.min(Math.max((t - t0) / 900, 0), 1);
         const eased = 1 - Math.pow(1 - p, 3);
         el.textContent = (to * eased).toFixed(decimals) + suffix;
         if (p < 1) requestAnimationFrame(tick);
@@ -138,51 +237,9 @@
     });
   };
 
-  const paint = () => {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("active", i === index);
-      slide.classList.toggle("before", i < index);
-    });
-    bar.style.width = `${((index + 1) / slides.length) * 100}%`;
-    counter.textContent = `${index + 1} / ${slides.length}`;
-    history.replaceState(null, "", location.search + `#${index + 1}`);
-    countUp(slides[index]);
-    send({ type: "dm-state", i: index });
-  };
-
-  const next = () => {
-    const hidden = stepsOf(slides[index]).find(
-      (el) => !el.classList.contains("shown")
-    );
-    if (hidden && !editing) {
-      hidden.classList.add("shown");
-      return;
-    }
-    if (index < slides.length - 1) {
-      index++;
-      if (editing) stepsOf(slides[index]).forEach((el) => el.classList.add("shown"));
-      paint();
-    }
-  };
-
-  const prev = () => {
-    const shown = stepsOf(slides[index]).filter((el) =>
-      el.classList.contains("shown")
-    );
-    if (shown.length && !editing) {
-      shown[shown.length - 1].classList.remove("shown");
-      return;
-    }
-    if (index > 0) {
-      index--;
-      stepsOf(slides[index]).forEach((el) => el.classList.add("shown"));
-      paint();
-    }
-  };
-
-  const jump = (n) => {
-    index = Math.min(Math.max(n, 0), slides.length - 1);
-    paint();
+  const activate = (slide) => {
+    countUp(slide);
+    animateCharts(slide);
   };
 
   const setEditing = (on) => {
@@ -194,10 +251,9 @@
     });
     if (on) {
       closeGrid();
-      slides.forEach((slide) =>
-        stepsOf(slide).forEach((el) => el.classList.add("shown"))
-      );
+      slides.forEach((slide) => stepsOf(slide).forEach((el) => showStep(el)));
       settleCounters();
+      settleCharts();
     }
     toolbar.querySelector('[data-act="edit"]').classList.toggle("on", on);
   };
@@ -207,7 +263,7 @@
   const closeGrid = () => gridEl()?.remove();
 
   const openGrid = () => {
-    if (gridEl()) return;
+    if (gridEl() || story) return;
     setEditing(false);
     const grid = document.createElement("div");
     grid.className = "grid";
@@ -234,32 +290,33 @@
   const toggleGrid = () => (gridEl() ? closeGrid() : openGrid());
 
   const openPresenter = () => {
+    if (story) return;
     const u = new URL(location.href);
     u.searchParams.set("presenter", "1");
     u.hash = "";
     pvWin = window.open(u, "dm-presenter");
   };
 
-  const play = () => {
-    setEditing(false);
-    closeGrid();
-    document.documentElement.requestFullscreen?.();
-    paint();
-  };
-
   const saveCopy = () => {
     const clone = document.documentElement.cloneNode(true);
+    clone.classList.remove("story");
+    const body = clone.querySelector("body");
+    body.classList.remove("editing", "story");
     clone
       .querySelectorAll("[contenteditable]")
       .forEach((el) => el.removeAttribute("contenteditable"));
-    clone.querySelector("body").classList.remove("editing");
     clone.querySelector(".grid")?.remove();
-    clone
-      .querySelectorAll(".slide")
-      .forEach((s) => s.classList.remove("active", "before"));
-    clone
-      .querySelectorAll("[data-step].shown")
-      .forEach((el) => el.classList.remove("shown"));
+    clone.querySelector(".story-cue")?.remove();
+    clone.querySelectorAll(".scene").forEach((scene) => {
+      const slide = scene.querySelector(".slide");
+      if (slide) scene.replaceWith(slide);
+    });
+    clone.querySelectorAll(".slide").forEach((s) => s.classList.remove("active", "before"));
+    clone.querySelectorAll("[data-step]").forEach((el) => {
+      el.classList.remove("shown");
+      clearAnim(el);
+    });
+    clone.querySelectorAll(".grow, .pt, .trace").forEach((el) => clearAnim(el));
     const blob = new Blob(["<!doctype html>\n" + clone.outerHTML], {
       type: "text/html",
     });
@@ -270,11 +327,185 @@
     URL.revokeObjectURL(a.href);
   };
 
+  let paint = () => {};
+  let next = () => {};
+  let prev = () => {};
+  let jump = () => {};
+
+  if (!story) {
+    paint = () => {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+        slide.classList.toggle("before", i < index);
+      });
+      bar.style.width = `${((index + 1) / slides.length) * 100}%`;
+      counter.textContent = `${index + 1} / ${slides.length}`;
+      history.replaceState(null, "", location.search + `#${index + 1}`);
+      activate(slides[index]);
+      send({ type: "dm-state", i: index });
+    };
+
+    next = () => {
+      const hidden = stepGroups(slides[index]).find((g) =>
+        g.some((el) => !el.classList.contains("shown"))
+      );
+      if (hidden && !editing) {
+        hidden.forEach(showStep);
+        return;
+      }
+      if (index < slides.length - 1) {
+        index++;
+        if (editing) stepsOf(slides[index]).forEach((el) => showStep(el));
+        paint();
+      }
+    };
+
+    prev = () => {
+      const shown = stepGroups(slides[index]).filter((g) =>
+        g.some((el) => el.classList.contains("shown"))
+      );
+      if (shown.length && !editing) {
+        shown[shown.length - 1].forEach(hideStep);
+        return;
+      }
+      if (index > 0) {
+        index--;
+        stepsOf(slides[index]).forEach((el) => showStep(el));
+        paint();
+      }
+    };
+
+    jump = (n) => {
+      index = Math.min(Math.max(n, 0), slides.length - 1);
+      paint();
+    };
+  }
+
+  if (story) {
+    document.documentElement.classList.add("story");
+    document.body.classList.add("story");
+    const scenes = slides.map((slide) => {
+      const scene = document.createElement("div");
+      scene.className = "scene";
+      const frame = document.createElement("div");
+      frame.className = "frame";
+      slide.parentNode.insertBefore(scene, slide);
+      scene.appendChild(frame);
+      frame.appendChild(slide);
+      const steps = stepGroups(slide).length;
+      scene.style.setProperty("--scene-h", `${150 + steps * 70}vh`);
+      return scene;
+    });
+    const lastScene = scenes[scenes.length - 1];
+    if (!stepGroups(slides[slides.length - 1]).length)
+      lastScene.style.setProperty("--scene-h", "100vh");
+
+    const cue = document.createElement("div");
+    cue.className = "story-cue";
+    cue.textContent = "scroll";
+    document.body.appendChild(cue);
+    hint.remove();
+
+    const sceneProgress = (scene) => {
+      const r = scene.getBoundingClientRect();
+      const span = r.height - innerHeight;
+      return span > 0 ? Math.min(Math.max(-r.top / span, 0), 1) : r.top < 0 ? 1 : 0;
+    };
+
+    const currentScene = () => {
+      const mid = innerHeight * 0.5;
+      for (let i = scenes.length - 1; i >= 0; i--) {
+        if (scenes[i].getBoundingClientRect().top <= mid) return i;
+      }
+      return 0;
+    };
+
+    const setSteps = (slide, count) => {
+      stepGroups(slide).forEach((g, j) =>
+        g.forEach(j < count ? showStep : hideStep)
+      );
+    };
+
+    const onScroll = () => {
+      const i = currentScene();
+      if (i !== index) {
+        index = i;
+        slides.forEach((slide, j) => {
+          slide.classList.toggle("active", j === index);
+          slide.classList.toggle("before", j < index);
+        });
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        history.replaceState(null, "", location.search + `#${index + 1}`);
+        activate(slides[index]);
+      }
+      const p = sceneProgress(scenes[index]);
+      const groups = stepGroups(slides[index]);
+      if (groups.length && !editing) {
+        const count = Math.min(
+          groups.length,
+          Math.max(0, Math.floor(((p - 0.22) / 0.62) * groups.length + 1))
+        );
+        setSteps(slides[index], count);
+      }
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - innerHeight;
+      bar.style.width = `${total > 0 ? (scrollY / total) * 100 : 100}%`;
+      if (scrollY > 40) cue.classList.add("gone");
+    };
+
+    slides[0].classList.add("active");
+    counter.textContent = `1 / ${slides.length}`;
+
+    const groupCount = (i) => stepGroups(slides[i]).length;
+    const shownGroups = (i) =>
+      stepGroups(slides[i]).filter((g) =>
+        g.every((el) => el.classList.contains("shown"))
+      ).length;
+
+    const beatTop = (i, count) => {
+      const scene = scenes[i];
+      const n = groupCount(i);
+      if (count <= 0 || !n) return scene.offsetTop;
+      const span = scene.offsetHeight - innerHeight;
+      const p = Math.min(0.22 + (0.62 * (count - 1)) / n + 0.31 / n, 1);
+      return scene.offsetTop + span * p;
+    };
+
+    next = () => {
+      const n = groupCount(index);
+      const c = shownGroups(index);
+      if (c < n) scrollTo({ top: beatTop(index, c + 1), behavior: "smooth" });
+      else if (index < scenes.length - 1)
+        scrollTo({ top: scenes[index + 1].offsetTop, behavior: "smooth" });
+    };
+
+    prev = () => {
+      const c = shownGroups(index);
+      if (c > 0) scrollTo({ top: beatTop(index, c - 1), behavior: "smooth" });
+      else if (index > 0)
+        scrollTo({ top: beatTop(index - 1, groupCount(index - 1)), behavior: "smooth" });
+    };
+
+    jump = (n) => {
+      const scene = scenes[Math.min(Math.max(n, 0), scenes.length - 1)];
+      scrollTo({ top: scene.offsetTop, behavior: "smooth" });
+    };
+
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    requestAnimationFrame(onScroll);
+  }
+
   toolbar.addEventListener("click", (e) => {
     const act = e.target.closest("button")?.dataset.act;
     if (act === "edit") setEditing(!editing);
-    else if (act === "play") play();
-    else if (act === "grid") toggleGrid();
+    else if (act === "play") {
+      if (story) return;
+      setEditing(false);
+      closeGrid();
+      document.documentElement.requestFullscreen?.();
+      paint();
+    } else if (act === "grid") toggleGrid();
     else if (act === "pdf") window.print();
     else if (act === "notes") openPresenter();
     else if (act === "save") saveCopy();
@@ -283,7 +514,7 @@
   });
 
   const onMsg = (m) => {
-    if (!m) return;
+    if (!m || story) return;
     if (m.type === "dm-hello") send({ type: "dm-state", i: index });
     else if (m.type === "dm-cmd") m.cmd === "next" ? next() : prev();
   };
@@ -334,7 +565,7 @@
   addEventListener(
     "touchend",
     (e) => {
-      if (touchX === null || editing) return;
+      if (touchX === null || editing || story) return;
       const dx = e.changedTouches[0].clientX - touchX;
       if (dx < -50) next();
       if (dx > 50) prev();
@@ -345,16 +576,25 @@
 
   addEventListener("beforeprint", () => {
     settleCounters();
+    settleCharts();
     closeGrid();
+    slides.forEach((slide) =>
+      stepsOf(slide).forEach((el) => {
+        el.classList.add("shown");
+        clearAnim(el);
+      })
+    );
   });
-
-  const fromHash = parseInt(location.hash.slice(1), 10);
-  if (fromHash >= 1 && fromHash <= slides.length) index = fromHash - 1;
 
   fit();
   addEventListener("resize", fit);
   stagger();
   settleCounters();
-  jump(index);
-  setTimeout(() => hint.classList.add("gone"), 4000);
+
+  if (!story) {
+    const fromHash = parseInt(location.hash.slice(1), 10);
+    if (fromHash >= 1 && fromHash <= slides.length) index = fromHash - 1;
+    jump(index);
+    setTimeout(() => hint.classList.add("gone"), 4000);
+  }
 })();

@@ -5,15 +5,15 @@ description: Use when the user wants a presentation or slide deck from any mater
 
 # deck-meet
 
-Turns any material plus a conversation into a standalone animated HTML deck: one self-contained file, no install, no network, arrow keys to present, SVG diagrams that move, an edit mode for last-minute changes, and a play button that goes fullscreen. On request it also emits a markdown outline of the approved plan and a rendered PDF.
+Turns any material plus a conversation into a standalone animated HTML deck: one self-contained file, no install, no network, arrow keys to present, SVG diagrams that move, an edit mode for last-minute changes, and a play button that goes fullscreen. A deck can also be built as a scroll story: the same slides stacked vertically, where scrolling drives the reveals, for decks that get shared as a link instead of presented live. On request it also emits a markdown outline of the approved plan and a rendered PDF.
 
 The deck is only as good as the intent behind it. The build is the cheap part; the interview and the slide plan are the work. **Never build before the plan is approved.**
 
 ## The one rule that makes it look good
 
-**Do not design. Assemble.** The `reference/` directory next to this file is a finished design system: `fonts.css` (Space Grotesk, Inter, and JetBrains Mono embedded as data URIs, so decks work offline), `theme.css` (the color and font tokens, the only theming surface), `base.css`, `runtime.js`, `skeleton.html` (the slide patterns), `svg-motifs.md`, `assemble.py`, and `verify.sh`. The deck is built by writing a slides fragment and running `assemble.py`, which pastes the system verbatim around it. Every diagram is a motif from `svg-motifs.md` with labels changed. A deck that follows the motifs exactly looks deliberate; a deck that improvises looks like every other generated page. The only creative work is picking the right visual for each idea and writing the sentences.
+**Do not design. Assemble.** The `reference/` directory next to this file is a finished design system: `fonts.css` (Space Grotesk, Inter, and JetBrains Mono embedded as data URIs, so decks work offline), `theme.css` (the color and font tokens, the only theming surface), `DESIGN.md` (slide archetypes, content rules, and taste laws), `base.css`, `runtime.js`, `anime.umd.min.js` (the vendored animation engine, MIT), `skeleton.html` (the slide patterns), `svg-motifs.md`, `assemble.py`, and `verify.sh`. The deck is built by writing a slides fragment and running `assemble.py`, which pastes the system verbatim around it. Every diagram is a motif from `svg-motifs.md` with labels changed. A deck that follows the motifs exactly looks deliberate; a deck that improvises looks like every other generated page. The only creative work is picking the right visual for each idea and writing the sentences.
 
-Read every file in `reference/` except `fonts.css` before starting. Do not skip this because the task looks simple.
+Read every file in `reference/` except `fonts.css` and `anime.umd.min.js` before starting. Do not skip this because the task looks simple.
 
 ## Phase 1: Gather
 
@@ -36,19 +36,25 @@ Ask, in one short round (use AskUserQuestion when available, plain questions oth
 2. **Occasion and time**: standup, sprint review, external talk, teaching session? How many minutes?
 3. **Goal**: after the last slide, what should the audience think, feel, or do? One sentence.
 4. **Must-land**: the one thing that cannot be lost, and anything to deliberately leave out.
+5. **Delivery**: presented live (talk mode, arrow keys, presenter window) or shared as a link people read alone (story mode, scrolling drives the reveals)?
 
 Follow up only where an answer changes the deck. Time gives the slide budget: roughly one content slide per 1.5 to 2 minutes, plus title and closing. Keep asking until the slide count is settled with the user, not assumed.
 
+From the answers, pick the heading voice (the `--voice` presets in `base.css`: `display`, `editorial`, `mono`, `contrast`, `numbered`) by content mood per `DESIGN.md`. Do not ask a separate question for it; propose it in the plan header where the user can veto it.
+
 ## Phase 3: Slide plan (approval gate)
 
-Propose the full plan as a numbered list, one line block per slide:
+Propose the full plan as a numbered list, opening with one header line, then one block per slide:
 
 ```
+mode: <talk | story>   voice: <display | editorial | mono | contrast | numbered>
+
 NN. <slide title as a sentence>
+    archetype: <stat / statement / list / chart / diagram / section / title / closing, per DESIGN.md>
     intent: <what the audience should get from this slide, one sentence>
     content: <bullets, number, code, or prose, sketched in a few words>
     visual: <motif from svg-motifs.md, or stats / panels / quote / steps / rules / table / code / none>
-    reveals: <none, or which elements step in on arrow presses>
+    reveals: <none, or which elements step in on arrow presses or scroll beats>
     notes: <optional: one or two spoken lines for the presenter window, when the user gave or wants them>
 ```
 
@@ -67,12 +73,12 @@ Plan rules:
 
 Write a slides fragment, then assemble:
 
-1. Write `<slug>.slides.html`: one `<section class="slide" aria-label="...">` per approved slide, following the patterns in `skeleton.html`. Title slide gets `class="slide center"` and the only `h1`, closing slide gets `center`. Never copy a block that carries `data-example`; those are teaching patterns, not content.
-2. Fill each slide from its plan line. Visuals come from `svg-motifs.md` or the HTML blocks it lists. Mechanism diagrams get motion primitives; charts, timelines, and matrices stay still. At most three moving things per diagram.
-3. Reveals: `data-step="1"`, `data-step="2"` on the planned elements, numbered per slide in the order they should appear.
+1. Write `<slug>.slides.html`: one `<section class="slide" aria-label="...">` per approved slide, following the patterns in `skeleton.html` and the archetype structures in `DESIGN.md`. Title slide gets `class="slide center"` and the only `h1`, closing slide gets `center`. Never copy a block that carries `data-example`; those are teaching patterns, not content.
+2. Fill each slide from its plan line. Visuals come from `svg-motifs.md` or the HTML blocks it lists. Mechanism diagrams get motion primitives; charts get `.grow`, `.trace`, and `.pt`; timelines and matrices stay still. At most three moving things per diagram.
+3. Reveals: `data-step="1"`, `data-step="2"` on the planned elements, numbered per slide in the order they should appear. Steps work on svg elements too: a stepped `.draw` wire draws itself when revealed, a stepped node scales in. In story mode the same steps fire on scroll beats.
 4. Speaker notes: `<aside class="notes">...</aside>` as the last child of a slide that has them. Never rendered on the slide or in the PDF; the presenter window reads them.
 5. Suffix svg marker ids per diagram (`arr`, `arr2`, `arr3`) so they never collide in one file.
-6. Assemble: `python3 <skill-dir>/reference/assemble.py "<Title>" <slug>.slides.html <slug>.html`
+6. Assemble: `python3 <skill-dir>/reference/assemble.py "<Title>" <slug>.slides.html <slug>.html --voice <voice> --mode <mode>` with the approved plan header values.
 7. Grep the output for `{{` and expect zero hits before calling it written.
 
 Hard limits, each a build failure:
@@ -82,7 +88,8 @@ Hard limits, each a build failure:
 - One accent color. `.ok` and `.err` are the only other hues. No hex outside `theme.css`.
 - No em dash, en dash, or spaced hyphen in any rendered string. Rewrite with a comma, colon, or two sentences.
 - No external resources at all. Fonts ship inside the file; the deck must open with networking off.
-- Nothing changed in `fonts.css`, `theme.css`, `base.css`, or `runtime.js`. A styling need the system cannot meet is raised with the user, not patched inline.
+- Nothing changed in `fonts.css`, `theme.css`, `base.css`, `runtime.js`, or `anime.umd.min.js`. A styling need the system cannot meet is raised with the user, not patched inline.
+- Every slide keeps to its approved archetype and the density caps in `DESIGN.md`.
 
 ## Phase 5: Verify
 
@@ -105,7 +112,7 @@ With no such browser, tell the user to open the deck and print it; the print CSS
 
 ## Phase 6: Report
 
-State: output path(s), slide count against the approved plan, which motifs were used, anything from the source deliberately dropped and why, and the controls: arrow keys or space to move, F for fullscreen, O for the overview grid (click a thumbnail to jump), N for the presenter window (notes, clock, next slide; its arrow keys drive the deck), position survives reload via the URL hash, and the toolbar top right. The toolbar's `edit` (or the E key) makes every slide text-editable in place with prev/next buttons for moving between slides, `grid` and `notes` mirror O and N, `pdf` opens the print dialog with the tuned print styles (save as PDF gives exact 16:9 pages), `play` leaves edit mode and goes fullscreen to present, `save copy` downloads the deck with the edits baked in. The file is fully self-contained and works offline.
+State: output path(s), slide count against the approved plan, mode and voice, which motifs were used, anything from the source deliberately dropped and why, and the controls. Talk mode: arrow keys or space to move, F for fullscreen, O for the overview grid (click a thumbnail to jump), N for the presenter window (notes, clock, next slide; its arrow keys drive the deck), position survives reload via the URL hash, and the toolbar top right. Story mode: scrolling advances everything (reveals fire on scroll beats), left and right arrows nudge a beat at a time, Home and End jump to the first and last slide, and the toolbar keeps edit, pdf, and save copy. The toolbar's `edit` (or the E key) makes every slide text-editable in place with prev/next buttons for moving between slides, `grid` and `notes` mirror O and N, `pdf` opens the print dialog with the tuned print styles (save as PDF gives exact 16:9 pages), `play` leaves edit mode and goes fullscreen to present, `save copy` downloads the deck with the edits baked in. The file is fully self-contained and works offline.
 
 ## Iteration
 
