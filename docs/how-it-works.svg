@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img" aria-label="How deck-meet works: gather your material, a short interview, a slide plan you approve, then one HTML deck built and checked">
+  <style>
+    .t { font-family: "Space Grotesk", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; fill: #ece9e4; font-size: 24px; font-weight: 600; }
+    .s { font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; fill: #9b968e; font-size: 15px; }
+    .n { font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace; fill: #9b968e; font-size: 13px; letter-spacing: 2px; }
+    .na { font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace; fill: #e8a33d; font-size: 13px; letter-spacing: 2px; }
+    .box { fill: #1c1b19; stroke: #2e2c29; stroke-width: 1.5; }
+    .gate { fill: #1c1b19; stroke: #e8a33d; stroke-width: 2; }
+    .edge { stroke: #5a5650; stroke-width: 1.5; fill: none; }
+    .tip { fill: #5a5650; }
+  </style>
+  <rect width="1200" height="380" rx="20" fill="#151413"/>
+  <text x="60" y="66" class="n">[ HOW IT WORKS ]</text>
+  <text x="60" y="104" class="t" style="font-size:30px">Your material in, one deck you can present out</text>
+
+  <rect x="60" y="150" width="240" height="170" rx="14" class="box"/>
+  <text x="84" y="186" class="n">01 GATHER</text>
+  <text x="84" y="224" class="t">Bring anything</text>
+  <text x="84" y="256" class="s">Notes, markdown, PDF,</text>
+  <text x="84" y="278" class="s">docx, a URL, or just</text>
+  <text x="84" y="300" class="s">an idea you talk through</text>
+
+  <rect x="340" y="150" width="240" height="170" rx="14" class="box"/>
+  <text x="364" y="186" class="n">02 INTERVIEW</text>
+  <text x="364" y="224" class="t">Five questions</text>
+  <text x="364" y="256" class="s">Audience, time slot,</text>
+  <text x="364" y="278" class="s">goal, the one thing that</text>
+  <text x="364" y="300" class="s">must land, live or link</text>
+
+  <rect x="620" y="150" width="240" height="170" rx="14" class="gate"/>
+  <text x="644" y="186" class="na">03 PLAN</text>
+  <text x="644" y="224" class="t">You approve it</text>
+  <text x="644" y="256" class="s">A numbered plan, slide</text>
+  <text x="644" y="278" class="s">by slide. Nothing is built</text>
+  <text x="644" y="300" class="s">until you say yes</text>
+
+  <rect x="900" y="150" width="240" height="170" rx="14" class="box"/>
+  <text x="924" y="186" class="n">04 BUILD</text>
+  <text x="924" y="224" class="t">One HTML file</text>
+  <text x="924" y="256" class="s">Animated, offline, with</text>
+  <text x="924" y="278" class="s">notes and PDF export,</text>
+  <text x="924" y="300" class="s">checked by 27 tests</text>
+
+  <path d="M300 235 H332" class="edge"/><path d="M340 235 l-9 -5 v10 z" class="tip"/>
+  <path d="M580 235 H612" class="edge"/><path d="M620 235 l-9 -5 v10 z" class="tip"/>
+  <path d="M860 235 H892" class="edge"/><path d="M900 235 l-9 -5 v10 z" class="tip"/>
+</svg>

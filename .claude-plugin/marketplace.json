@@ -8,7 +8,7 @@
       "name": "deck-meet",
       "source": "./",
       "description": "Interview-driven slide deck generator: any material in, one standalone animated HTML deck out, with presenter tools and PDF export.",
-      "version": "0.1.0",
+      "version": "2.0.0",
       "category": "presentation"
     }
   ]
