@@ -30,18 +30,18 @@ Reuse `id="arr"` only once per svg. When one file holds several svgs, suffix the
 
 Mechanism diagrams must move; timelines and matrices stay still. At most three moving things per diagram, no loop faster than 1.5s. The runtime pauses everything on inactive slides and under reduced motion, and everything settles to its final frame for print, thumbnails, and reduced motion.
 
-Looping primitives run on CSS; one-shot primitives are driven by the embedded anime.js runtime with `outQuart` easing. Never bounce, never glow, never blur.
+Looping primitives run on CSS; one-shot primitives are driven by `runtime.js` through the Web Animations API with an `outQuart` curve. Never bounce, never glow, never blur.
 
 | Class | Engine | What it does | Use on |
 |---|---|---|---|
 | `.packet` | CSS, loops | A dot travels the path given in `style="offset-path: path('...')"` | The data moving through a pipeline or between actors |
 | `.flow` | CSS, loops | Marching dashes along a wire | A stream or continuous channel |
 | `.pulse` | CSS, loops | Element breathes | The component doing the work right now |
-| `.draw` | CSS once, anime when stepped | Path draws itself, staggered by `--i` | Arrows appearing in causal order (set `pathLength="1"`) |
+| `.draw` | CSS once, runtime when stepped | Path draws itself, staggered by `--i` | Arrows appearing in causal order (set `pathLength="1"`) |
 | `.pop` | CSS once, staggered by `--i` | Element scales in | Boxes or nodes appearing in reading order |
-| `.grow` | anime, on activation | Bar scales from zero along x | Chart bars (`data-origin` overrides the default `left center`) |
-| `.trace` | anime, on activation | Line draws itself once | Chart lines and series paths |
-| `.pt` | anime, on activation | Points appear in a fast stagger | Chart point series |
+| `.grow` | runtime, on activation | Bar scales from zero along x | Chart bars (`data-origin` overrides the default `left center`) |
+| `.trace` | runtime, on activation | Line draws itself once | Chart lines and series paths |
+| `.pt` | runtime, on activation | Points appear in a fast stagger | Chart point series |
 
 Packet example, riding a wire from box A to box B. Start and end the offset path at least 16 units clear of any box edge so the dot never sits glued to a border between loops:
 

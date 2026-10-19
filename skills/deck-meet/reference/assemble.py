@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import argparse
+import base64
+import html as markup
+import re
 from pathlib import Path
 
 VOICES = ("display", "editorial", "mono", "contrast", "numbered")
@@ -40,14 +43,22 @@ TAIL = """
 </div>
 </div>
 <script>
-{anime}
-</script>
-<script>
 {runtime}
 </script>
 </body>
 </html>
 """
+
+
+def inline_fonts(css, ref):
+    def embed(match):
+        font = ref / match.group(1)
+        if not font.is_file():
+            return "local('none')"
+        data = base64.b64encode(font.read_bytes()).decode()
+        return f"url(data:font/woff2;base64,{data})"
+
+    return re.sub(r"url\((fonts/[a-z-]+\.woff2)\)", embed, css)
 
 
 def main():
@@ -62,15 +73,15 @@ def main():
     read = lambda name: (ref / name).read_text()
     html = (
         HEAD.format(
-            title=args.title,
+            title=markup.escape(args.title),
             voice=args.voice,
             mode=args.mode,
-            fonts=read("fonts.css"),
+            fonts=inline_fonts(read("fonts.css"), ref),
             theme=read("theme.css"),
             base=read("base.css"),
         )
         + args.slides.read_text().strip()
-        + TAIL.format(anime=read("anime.umd.min.js"), runtime=read("runtime.js"))
+        + TAIL.format(runtime=read("runtime.js"))
     )
     args.out.write_text(html)
     print(f"{args.out} ({len(html)} bytes, voice={args.voice}, mode={args.mode})")

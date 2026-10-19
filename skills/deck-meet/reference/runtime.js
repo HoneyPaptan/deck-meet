@@ -11,7 +11,7 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isPresenter = new URLSearchParams(location.search).has("presenter");
   const story = document.body.dataset.mode === "story" && !isPresenter;
-  const am = window.anime;
+  const outQuart = "cubic-bezier(0.25, 1, 0.5, 1)";
   const bc = "BroadcastChannel" in window ? new BroadcastChannel("dm-" + document.title) : null;
   let index = 0;
   let editing = false;
@@ -121,6 +121,7 @@
   };
 
   const clearAnim = (el) => {
+    el.getAnimations().forEach((a) => a.cancel());
     [
       "opacity",
       "transform",
@@ -132,25 +133,34 @@
     ].forEach((p) => el.style.removeProperty(p));
   };
 
+  const motion = (el, keyframes, duration, delay = 0) =>
+    el.animate(keyframes, { duration, delay, easing: outQuart, fill: "backwards" });
+
+  const draw = (el, duration, delay = 0) => {
+    const length = Number(el.getAttribute("pathLength")) || el.getTotalLength();
+    el.style.strokeDasharray = length;
+    motion(el, [{ strokeDashoffset: length }, { strokeDashoffset: 0 }], duration, delay)
+      .finished.then(() => el.style.removeProperty("stroke-dasharray"), () => {});
+  };
+
   const drawable = (el) =>
     el.ownerSVGElement && el.matches("path, line, polyline") && el.classList.contains("draw");
 
   const showStep = (el) => {
     if (el.classList.contains("shown")) return;
     el.classList.add("shown");
-    if (!am || reduced || editing) return;
+    if (reduced || editing) return;
     el.style.transition = "none";
     if (drawable(el)) {
       el.style.opacity = "1";
       el.style.transform = "none";
-      const [d] = am.svg.createDrawable(el);
-      am.animate(d, { draw: "0 1", duration: 700, ease: "outQuart" });
+      draw(el, 700);
     } else if (el.ownerSVGElement) {
       el.style.transformBox = "fill-box";
       el.style.transformOrigin = "center";
-      am.animate(el, { opacity: [0, 1], scale: [0.86, 1], duration: 450, ease: "outQuart" });
+      motion(el, [{ opacity: 0, transform: "scale(0.86)" }, { opacity: 1, transform: "none" }], 450);
     } else {
-      am.animate(el, { opacity: [0, 1], translateY: [14, 0], duration: 450, ease: "outQuart" });
+      motion(el, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], 450);
     }
   };
 
@@ -174,7 +184,7 @@
 
   const animateCharts = (slide) => {
     const { grows, pts, traces } = chartTargets(slide);
-    if (!am || reduced || editing) {
+    if (reduced || editing) {
       settleCharts(slide);
       return;
     }
@@ -182,28 +192,18 @@
       el.style.transformBox = "fill-box";
       el.style.transformOrigin = el.dataset.origin || "left center";
     });
-    if (grows.length)
-      am.animate(grows, {
-        scaleX: [0, 1],
-        duration: 800,
-        ease: "outQuart",
-        delay: am.stagger(90),
-      });
+    grows.forEach((el, i) =>
+      motion(el, [{ transform: "scaleX(0)" }, { transform: "none" }], 800, i * 90),
+    );
     pts.forEach((el) => {
       el.style.transformBox = "fill-box";
       el.style.transformOrigin = "center";
     });
-    if (pts.length)
-      am.animate(pts, {
-        opacity: [0, 1],
-        scale: [0.5, 1],
-        duration: 340,
-        ease: "outQuart",
-        delay: am.stagger(26),
-      });
+    pts.forEach((el, i) =>
+      motion(el, [{ opacity: 0, transform: "scale(0.5)" }, { opacity: 1, transform: "none" }], 340, i * 26),
+    );
     traces.forEach((el, i) => {
-      const [d] = am.svg.createDrawable(el);
-      am.animate(d, { draw: "0 1", duration: 1000, ease: "outQuart", delay: i * 140 });
+      draw(el, 1000, i * 140);
     });
   };
 
