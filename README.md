@@ -25,7 +25,7 @@ The interview and the plan are the real work. Nothing is built until you approve
 - **Talk or story.** Present live with arrow keys and a presenter window (`N`: notes, clock, next slide), or share a scrolling story people read alone.
 - **Edit in place** (`E`) and download a copy for last-minute changes.
 - **PDF export.** The `pdf` button prints one exact 16:9 page per slide.
-- **Checked before handoff.** A verifier runs 27 checks on every deck: no broken slots, no external resources, every diagram labelled for screen readers, and more.
+- **Checked before handoff.** A verifier runs 28 checks on every deck: no broken slots, no external resources, every diagram labelled for screen readers, and more.
 
 Try it: download [`docs/demos/deck-meet-demo.html`](docs/demos/deck-meet-demo.html) and open it in a browser. The story version is [`deck-meet-story.html`](docs/demos/deck-meet-story.html).
 

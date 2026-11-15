@@ -28,7 +28,7 @@ The agent interviews you (audience, time slot, goal, the one thing that must lan
 ## Files
 
 - `SKILL.md`: the workflow the agent follows.
-- `reference/`: the design system. `theme.css` holds every colour and font token, `base.css` and `runtime.js` style and drive the deck, `svg-motifs.md` and `skeleton.html` are the patterns, `DESIGN.md` the slide rules, `assemble.py` builds, `verify.py` runs 27 checks.
+- `reference/`: the design system. `theme.css` holds every colour and font token, `base.css` and `runtime.js` style and drive the deck, `svg-motifs.md` and `skeleton.html` are the patterns, `DESIGN.md` the slide rules, `assemble.py` builds, `verify.py` runs 28 checks.
 - `reference/fonts/`: Space Grotesk, Inter and JetBrains Mono, SIL OFL 1.1, licence texts alongside.
 - `examples/`: a sample slide plan and two slide sources to show the expected output.
 
