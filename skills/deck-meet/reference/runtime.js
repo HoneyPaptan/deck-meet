@@ -32,6 +32,78 @@
     slide?.querySelector("aside.notes")?.textContent.trim() ||
     "No notes for this slide.";
 
+  const helpRoot = () => document.querySelector(".kb");
+
+  const closeHelp = () => helpRoot()?.remove();
+
+  const helpRows = () => {
+    const rows = [
+      ["Right, Down, Space, PageDown", "next"],
+      ["Left, Up, Backspace, PageUp", "previous"],
+      ["Home", "first slide"],
+      ["End", "last slide"],
+      ["E", "edit"],
+    ];
+    if (!story) rows.push(["O", "grid"], ["N", "presenter window"]);
+    rows.push(["F", "fullscreen"]);
+    if (story) rows.push(["Esc", "close this list or leave edit"]);
+    else {
+      rows.push(
+        ["Esc", "close this list, close grid, leave edit, or close presenter"],
+        ["Q", "close presenter"],
+      );
+    }
+    rows.push(["?", "show or hide this list"]);
+    return rows;
+  };
+
+  const helpLine = (key, action) => {
+    const row = document.createElement("div");
+    row.className = "kb-row";
+    const keyEl = document.createElement("span");
+    keyEl.className = "kb-k";
+    keyEl.textContent = key;
+    const actionEl = document.createElement("span");
+    actionEl.className = "kb-a";
+    actionEl.textContent = action;
+    row.append(keyEl, actionEl);
+    return row;
+  };
+
+  const openHelp = () => {
+    if (helpRoot()) return;
+    const box = document.createElement("div");
+    box.className = "kb";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-label", "Keyboard shortcuts");
+    const title = document.createElement("p");
+    title.className = "kb-title";
+    title.textContent = "Keyboard";
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "kb-close";
+    close.textContent = "close";
+    close.addEventListener("click", closeHelp);
+    box.append(title, ...helpRows().map(([key, action]) => helpLine(key, action)), close);
+    document.body.appendChild(box);
+  };
+
+  const toggleHelp = () => (helpRoot() ? closeHelp() : openHelp());
+
+  const helpKey = (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return false;
+    if (e.key === "?") {
+      e.preventDefault();
+      toggleHelp();
+      return true;
+    }
+    if (e.key === "Escape" && helpRoot()) {
+      closeHelp();
+      return true;
+    }
+    return false;
+  };
+
   if (isPresenter) {
     document.body.classList.add("presenter");
     const pv = document.createElement("div");
@@ -78,6 +150,7 @@
     bc && (bc.onmessage = (e) => onMsg(e.data));
     addEventListener("message", (e) => onMsg(e.data));
     addEventListener("keydown", (e) => {
+      if (helpKey(e)) return;
       const k = e.key;
       if (["ArrowRight", "ArrowDown", " ", "PageDown"].includes(k)) {
         e.preventDefault();
@@ -306,6 +379,7 @@
       .querySelectorAll("[contenteditable]")
       .forEach((el) => el.removeAttribute("contenteditable"));
     clone.querySelector(".grid")?.remove();
+    clone.querySelector(".kb")?.remove();
     clone.querySelector(".story-cue")?.remove();
     clone.querySelectorAll(".scene").forEach((scene) => {
       const slide = scene.querySelector(".slide");
@@ -526,6 +600,7 @@
       if (e.key === "Escape") setEditing(false);
       return;
     }
+    if (helpKey(e)) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const k = e.key;
     if (gridEl() && !["o", "O", "Escape"].includes(k)) return;
@@ -575,6 +650,7 @@
   );
 
   addEventListener("beforeprint", () => {
+    closeHelp();
     settleCounters();
     settleCharts();
     closeGrid();
