@@ -901,6 +901,77 @@ figcaption strong {
   opacity: 0;
 }
 
+.kb {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  width: min(560px, calc(100vw - 48px));
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px 24px 16px;
+  color: var(--ink);
+}
+
+.kb-title {
+  font-family: var(--head-font);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.kb-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 7px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kb-k {
+  font-family: var(--mono-font);
+  font-size: 13px;
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.kb-a {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.kb-close {
+  font-family: var(--mono-font);
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.kb-close:hover,
+.kb-row:hover .kb-a {
+  color: var(--ink);
+}
+
+.kb-close:hover {
+  border-color: var(--accent);
+}
+
 .toolbar {
   position: fixed;
   top: 14px;
@@ -1329,6 +1400,7 @@ html.story body {
   .story-cue,
   .toolbar,
   .grid,
+  .kb,
   aside.notes {
     display: none !important;
   }
