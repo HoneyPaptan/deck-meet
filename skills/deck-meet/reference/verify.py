@@ -50,6 +50,18 @@ def count_lines(lines, pattern):
     return len(lines_matching(lines, pattern))
 
 
+def title_check(text):
+    found = re.search(r"<title\b[^>]*>(.*?)</title>", text, re.IGNORECASE | re.DOTALL)
+    if not found:
+        return False, "title missing"
+    value = found.group(1).strip()
+    if not value:
+        return False, "title empty"
+    if value == "{{TITLE}}":
+        return False, "title is still the skeleton placeholder {{TITLE}}"
+    return True, "title is set"
+
+
 def main():
     if len(sys.argv) != 2 or not Path(sys.argv[1]).is_file():
         print("usage: verify.py <deck.html>")
@@ -68,6 +80,9 @@ def main():
 
     for label, needle in HAS:
         report.check(needle in text, label)
+
+    ok, label = title_check(text)
+    report.check(ok, label)
 
     h1s = count_lines(lines, r"<h1")
     report.check(h1s == 1, f"exactly one h1 (found {h1s})")
