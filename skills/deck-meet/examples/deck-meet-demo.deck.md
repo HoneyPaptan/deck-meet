@@ -57,9 +57,9 @@ Everything else is whitespace. The taste laws live in DESIGN.md and the verifier
 
 ---
 
-## 27 automated checks, every build
+## 28 automated checks, every build
 
-The verifier grew from 17 to 27 checks across three releases while failures held at zero.
+The verifier grew from 17 to 28 checks across three releases while failures held at zero.
 
 <!-- intent: show the stat archetype with a supporting series chart -->
 
