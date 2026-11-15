@@ -29,6 +29,24 @@ The interview and the plan are the real work. Nothing is built until you approve
 
 Try it: download [`docs/demos/deck-meet-demo.html`](docs/demos/deck-meet-demo.html) and open it in a browser. The story version is [`deck-meet-story.html`](docs/demos/deck-meet-story.html).
 
+## Keyboard
+
+These keys work while a deck is open. Press `?` to show or hide the same list in the deck.
+
+| Keys | Action |
+|---|---|
+| Right, Down, Space, PageDown | next |
+| Left, Up, Backspace, PageUp | previous |
+| Home | first slide |
+| End | last slide |
+| E | edit |
+| O | grid (does nothing in story mode) |
+| N | presenter window (does nothing in story mode) |
+| F | fullscreen |
+| Esc | close this list, close grid, leave edit, or close presenter |
+| Q | close presenter |
+| ? | show or hide the shortcut list |
+
 ## Install
 
 **Claude Code** (plugin). Run these one at a time, each as its own prompt:
