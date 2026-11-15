@@ -924,18 +924,11 @@ figcaption strong {
 
 .kb-row {
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: baseline;
   gap: 20px;
   padding: 7px 0;
-  border: 0;
   border-top: 1px solid var(--line);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
 }
 
 .kb-k {
@@ -963,8 +956,7 @@ figcaption strong {
   margin-top: 14px;
 }
 
-.kb-close:hover,
-.kb-row:hover .kb-a {
+.kb-close:hover {
   color: var(--ink);
 }
 

@@ -36,25 +36,30 @@
 
   const closeHelp = () => helpRoot()?.remove();
 
-  const helpRows = [
-    ["Right, Down, Space, PageDown", "next"],
-    ["Left, Up, Backspace, PageUp", "previous"],
-    ["Home", "first slide"],
-    ["End", "last slide"],
-    ["E", "edit"],
-    ["O", "grid"],
-    ["N", "presenter window"],
-    ["F", "fullscreen"],
-    ["Esc", "close this list, close grid, leave edit, or close presenter"],
-    ["Q", "close presenter"],
-    ["?", "show or hide this list"],
-  ];
+  const helpRows = () => {
+    const rows = [
+      ["Right, Down, Space, PageDown", "next"],
+      ["Left, Up, Backspace, PageUp", "previous"],
+      ["Home", "first slide"],
+      ["End", "last slide"],
+      ["E", "edit"],
+    ];
+    if (!story) rows.push(["O", "grid"], ["N", "presenter window"]);
+    rows.push(["F", "fullscreen"]);
+    if (story) rows.push(["Esc", "close this list or leave edit"]);
+    else {
+      rows.push(
+        ["Esc", "close this list, close grid, leave edit, or close presenter"],
+        ["Q", "close presenter"],
+      );
+    }
+    rows.push(["?", "show or hide this list"]);
+    return rows;
+  };
 
   const helpLine = (key, action) => {
-    const row = document.createElement("button");
-    row.type = "button";
+    const row = document.createElement("div");
     row.className = "kb-row";
-    row.tabIndex = -1;
     const keyEl = document.createElement("span");
     keyEl.className = "kb-k";
     keyEl.textContent = key;
@@ -62,7 +67,6 @@
     actionEl.className = "kb-a";
     actionEl.textContent = action;
     row.append(keyEl, actionEl);
-    row.addEventListener("click", closeHelp);
     return row;
   };
 
@@ -80,7 +84,7 @@
     close.className = "kb-close";
     close.textContent = "close";
     close.addEventListener("click", closeHelp);
-    box.append(title, ...helpRows.map(([key, action]) => helpLine(key, action)), close);
+    box.append(title, ...helpRows().map(([key, action]) => helpLine(key, action)), close);
     document.body.appendChild(box);
   };
 
